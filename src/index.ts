@@ -1,2 +1,2 @@
-export * from "./entity";
-export * from "./world";
+export { Entity } from "./entity";
+export { World } from "./world";
