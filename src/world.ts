@@ -57,33 +57,6 @@ export class World {
     return archetype._entities.slice(start);
   }
 
-  private _allocate(): Entity {
-    if (this._free.length > 0) {
-      const index = this._free.pop()!;
-      const version = this._versions[index];
-      return createEntity(index, version);
-    } else {
-      const index = this._versions.length;
-      this._locations.push(0, 0);
-      this._versions.push(0);
-      return createEntity(index, 0);
-    }
-  }
-
-  private _findOrCreateArchetype(types: Function[]): number {
-    const archetypeIndex = this._archetypes.findIndex(
-      archetype =>
-        types.length === archetype._components.size &&
-        types.every(type => archetype._components.has(type))
-    );
-
-    if (archetypeIndex < 0) {
-      return this._archetypes.push(new Archetype(types)) - 1;
-    } else {
-      return archetypeIndex;
-    }
-  }
-
   delete(entity: Entity): boolean {
     if (this.isAlive(entity)) {
       const index = getIndex(entity);
@@ -125,5 +98,32 @@ export class World {
     }
 
     return undefined;
+  }
+
+  private _allocate(): Entity {
+    if (this._free.length > 0) {
+      const index = this._free.pop()!;
+      const version = this._versions[index];
+      return createEntity(index, version);
+    } else {
+      const index = this._versions.length;
+      this._locations.push(0, 0);
+      this._versions.push(0);
+      return createEntity(index, 0);
+    }
+  }
+
+  private _findOrCreateArchetype(types: Function[]): number {
+    const archetypeIndex = this._archetypes.findIndex(
+      archetype =>
+        types.length === archetype._components.size &&
+        types.every(type => archetype._components.has(type))
+    );
+
+    if (archetypeIndex < 0) {
+      return this._archetypes.push(new Archetype(types)) - 1;
+    } else {
+      return archetypeIndex;
+    }
   }
 }
