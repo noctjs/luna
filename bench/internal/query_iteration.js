@@ -10,12 +10,13 @@ const { Suite } = require("benchmark");
  * Results on node v13.5.0:
  *
  *   loop x 5,203 ops/sec ±0.77% (93 runs sampled)
+ *   loop (pre-allocate) x 6,090 ops/sec ±0.60% (90 runs sampled)
  *   map x 2,992 ops/sec ±0.55% (92 runs sampled)
  *   callback x 9,901 ops/sec ±9.98% (85 runs sampled)  [FASTEST]
  *   forEach x 4,885 ops/sec ±4.09% (88 runs sampled)
  *   iterator x 2,605 ops/sec ±0.65% (92 runs sampled)  [SLOWEST]
  *
- * An interesting finding is that native Array methods are way slower than
+ * An interesting finding is that native `Array` methods are way slower than
  * their pure JS equivalent.
  */
 
@@ -32,6 +33,17 @@ function query_loop(entities) {
   let res = [];
   for (let entity of entities) {
     res.push([entity.a, entity.b]);
+  }
+  return res;
+}
+
+/**
+ * Same as `query_loop` but using a pre-allocated array.
+ */
+function query_loop_preallocate(entities) {
+  let res = new Array(entities.length);
+  for (let i = 0; i < entities.length; i++) {
+    res[i] = [entities[i].a, entities[i].b];
   }
   return res;
 }
@@ -94,6 +106,11 @@ for (let i = 0; i < NUM_ENTITIES; i++) {
 new Suite()
   .add("loop", () => {
     for (let [a, b] of query_loop(entities)) {
+      a.x += b.x;
+    }
+  })
+  .add("loop (pre-allocate)", () => {
+    for (let [a, b] of query_loop_preallocate(entities)) {
       a.x += b.x;
     }
   })
