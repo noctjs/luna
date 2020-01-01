@@ -69,9 +69,7 @@ export class World {
       }
       const swapped = swapRemove(archetype._entities, componentIndex);
       if (swapped) {
-        const swappedIndex = getIndex(swapped);
-        this._locations[(swappedIndex << 1) + 0] = archetypeIndex;
-        this._locations[(swappedIndex << 1) + 1] = componentIndex;
+        this._locations[(getIndex(swapped) << 1) + 1] = componentIndex;
       }
       this._versions[index] = (version + 1) & 255;
       this._free.push(index);
@@ -124,6 +122,56 @@ export class World {
       return this._archetypes.push(new Archetype(types)) - 1;
     } else {
       return archetypeIndex;
+    }
+  }
+}
+
+export class Query<T extends any[]> {
+  private _types: Function[];
+
+  constructor(types: Function[]) {
+    this._types = types;
+  }
+
+  keys(world: World): Entity[] {
+    let entities: Entity[] = [];
+
+    this._forEachMatchingArchetypes(world, archetype => {
+      entities.push(...archetype._entities);
+    });
+
+    return entities;
+  }
+
+  values(world: World): T[] {
+    let values: T[] = [];
+
+    this._forEachMatchingArchetypes(world, archetype => {
+      let start = values.length;
+      let size = archetype._entities.length;
+      let storages = this._types.map(type => archetype._components.get(type)!);
+
+      values.length += archetype._entities.length;
+
+      for (let i = 0; i < size; i++) {
+        values[start + i] = storages.map(storage => storage[i]) as T;
+      }
+    });
+
+    return values;
+  }
+
+  private _forEachMatchingArchetypes(
+    world: World,
+    callback: (archetype: Archetype) => void
+  ): void {
+    for (let archetype of world["_archetypes"]) {
+      if (
+        this._types.length <= archetype._components.size &&
+        this._types.every(type => archetype._components.has(type))
+      ) {
+        callback(archetype);
+      }
     }
   }
 }

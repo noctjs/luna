@@ -1,2 +1,2 @@
 export { Entity } from "./entity";
-export { World } from "./world";
+export { Query, World } from "./world";
