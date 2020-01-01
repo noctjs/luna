@@ -1,4 +1,4 @@
-const { Suite } = require("benchmark");
+const { suite } = require("../utils");
 
 /**
  * The goal of this benchmark is identify which ECS storage implementation
@@ -23,17 +23,17 @@ const { Suite } = require("benchmark");
  * Results on node v13.5.0:
  *
  *   Array of Structures
- *    baseline x 348,988 ops/sec ±0.53% (93 runs sampled)
- *    chunks x 283,002 ops/sec ±0.48% (91 runs sampled)
+ *    baseline: 348,988 op/s (±0.53%)
+ *    chunks: 283,002 op/s (±0.48%)
  *
  *  Structure of Arrays
- *    baseline x 353,105 ops/sec ±0.52% (96 runs sampled)
- *    chunks x 310,852 ops/sec ±0.76% (95 runs sampled)    [FASTEST]
- *    lookup x 167,793 ops/sec ±1.09% (92 runs sampled)
+ *    baseline: 353,105 op/s (±0.52%)
+ *    chunks: 310,852 op/s (±0.76%)    [FASTEST]
+ *    lookup: 167,793 op/s (±1.09%)
  *
  *  Flat array
- *    baseline x 354,142 ops/sec ±0.49% (93 runs sampled)
- *    lookup x 166,462 ops/sec ±0.49% (95 runs sampled)    [SLOWEST]
+ *    baseline: 354,142 op/s (±0.49%)
+ *    lookup: 166,462 op/s (±0.49%)    [SLOWEST]
  *
  * Lookup based implementations are 2 times slower than the others.
  *
@@ -196,15 +196,6 @@ function check(a, b) {
   if (a.x + 1 !== b.y) {
     throw new Error();
   }
-}
-
-function suite(name) {
-  return new Suite()
-    .on("start", () => console.log(name))
-    .on("complete", () => console.log())
-    .on("cycle", event =>
-      console.log(event.target.error || "  " + event.target)
-    );
 }
 
 suite("Array of Structures")

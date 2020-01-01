@@ -15,32 +15,23 @@ exports.range = (min, max) => {
   return array;
 };
 
-exports.bench = name => {
-  const suite = new Suite();
-
-  suite.on("start", () => {
-    console.log(chalk.white.bold(name));
-  });
-
-  suite.on("cycle", event => {
-    const { target } = event;
-    let text;
-    if (target.error) {
-      text = `  ${chalk.red("✕")} ${chalk.white(target.name)}`;
-    } else {
-      const ops = Math.floor(target.hz).toLocaleString();
-      const rme = target.stats.rme.toFixed(2);
-      text =
-        `  ${chalk.green("✓")} ${chalk.white(target.name)} ` +
-        chalk.gray(`[ ${ops} op/s (±${rme}%) ]`);
-    }
-
-    console.log(text);
-  });
-
-  suite.on("complete", () => {
-    console.log();
-  });
-
-  return suite;
+exports.suite = name => {
+  return new Suite()
+    .on("start", () => {
+      console.log(chalk.white.bold(name));
+    })
+    .on("complete", () => {
+      console.log();
+    })
+    .on("cycle", event => {
+      let bench = event.target;
+      if (bench.error) {
+        console.log(`  ${bench.name}  ${chalk.red.inverse(" ERROR ")}`);
+        console.log(chalk.red(bench.error.stack));
+      } else {
+        let ops = Math.floor(bench.hz).toLocaleString();
+        let rme = bench.stats.rme.toFixed(2);
+        console.log(`  ${bench.name}:`, chalk.gray(`${ops} op/s (±${rme}%)`));
+      }
+    });
 };

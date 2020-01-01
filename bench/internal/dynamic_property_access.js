@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { Suite } = require("benchmark");
+const { suite } = require("../utils");
 
 /**
  * The goal of this benchmark is to measure the cost of dynamic property
@@ -7,12 +7,12 @@ const { Suite } = require("benchmark");
  *
  * Results on node v13.5.0:
  *
- *   1. direct x 348,075 ops/sec ±0.88% (95 runs sampled)             [BASELINE]
- *   2. keyed x 24,428 ops/sec ±0.70% (95 runs sampled)
- *   3. dynamic callback x 24,233 ops/sec ±1.17% (92 runs sampled)
- *   4. bound callback x 24,509 ops/sec ±1.21% (94 runs sampled)
- *   5. compiled callback x 353,567 ops/sec ±0.70% (96 runs sampled)  [FASTEST]
- *   6. unique callback x 352,647 ops/sec ±0.47% (91 runs sampled)    [FASTEST]
+ *   1. direct: 348,075 op/s (±0.88%)             [BASELINE]
+ *   2. keyed: 24,428 op/s (±0.70%)
+ *   3. dynamic callback: 24,233 op/s (±1.17%)
+ *   4. bound callback: 24,509 op/s (±1.21%)
+ *   5. compiled callback: 353,567 op/s (±0.70%)  [FASTEST]
+ *   6. unique callback: 352,647 op/s (±0.47%)    [FASTEST]
  *
  * As expected, keyed accesses are the slowest.
  *
@@ -116,7 +116,7 @@ const get_ba_compiled = get_compiled("b", "a");
 const get_ab_unique = get_unique("a", "b");
 const get_ba_unique = get_unique("b", "a");
 
-new Suite()
+suite("Dynamic property access")
   .add("direct", () => {
     check(direct_access(values));
     check(direct_access(values));
@@ -141,5 +141,4 @@ new Suite()
     check(callback_access(values, get_ab_unique));
     check(callback_access(values, get_ba_unique));
   })
-  .on("cycle", event => console.log(String(event.target)))
   .run();
