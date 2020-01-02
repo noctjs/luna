@@ -20,6 +20,7 @@ function createConfig({ format, output, replacements = {} }) {
       terser({
         ecma: 9,
         toplevel: true,
+        module: format === "esm",
         compress: {
           passes: 10,
           pure_getters: true,
