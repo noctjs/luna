@@ -1,29 +1,45 @@
-const assert = require("assert");
-const { World } = require("..");
-const { suite } = require("./utils");
+import {
+  createEntity,
+  createTypeRegistry,
+  createWorld,
+  deleteEntity,
+  getComponent,
+  registerComponent
+} from "../dist/luna.esm.js";
+import { suite } from "./utils.js";
 
-class A {}
-class B {}
-class C {}
+let registry = createTypeRegistry();
 
-let world = new World();
+let TA = registerComponent(registry, () => ({}));
+let TB = registerComponent(registry, () => ({}));
+let TC = registerComponent(registry, () => ({}));
 
-let [entity] = world.create([[new A()]]);
-let [zombie] = world.create([[new B()]]);
+let world = createWorld(registry);
 
-world.delete(zombie);
+let entity = createEntity(world, TA);
+let dead = createEntity(world, TB);
+
+deleteEntity(world, dead);
 
 suite("get component")
   .add("success", () => {
-    assert(world.getComponent(entity, A) !== undefined);
+    if (!getComponent(world, entity, TA)) {
+      throw new Error("Expecting component A");
+    }
   })
   .add("failure", () => {
-    assert(world.getComponent(entity, B) === undefined);
+    if (getComponent(world, entity, TB)) {
+      throw new Error("Unexpected component B");
+    }
   })
   .add("unknown component", () => {
-    assert(world.getComponent(entity, C) === undefined);
+    if (getComponent(world, entity, TC)) {
+      throw new Error("Unexpected component C");
+    }
   })
   .add("on dead entity", () => {
-    assert(world.getComponent(zombie, A) === undefined);
+    if (getComponent(world, dead, TA)) {
+      throw new Error("Unexpected component A");
+    }
   })
   .run();

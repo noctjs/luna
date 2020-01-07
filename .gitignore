@@ -1,4 +1,4 @@
-build
 dist
+types
 node_modules
 *.log

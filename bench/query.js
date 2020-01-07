@@ -1,29 +1,56 @@
-const { Query, World } = require("..");
-const { range, suite } = require("./utils");
+import {
+  createEntities,
+  createQuery,
+  createTypeRegistry,
+  createWorld,
+  iterateEntities,
+  registerComponent,
+  registerType,
+  iterateQuery
+} from "../dist/luna.esm.js";
+import { suite } from "./utils.js";
 
-class A {}
-class B {}
-class C {}
-class D {}
+let registry = createTypeRegistry();
 
-let world = new World();
+let TA = registerComponent(registry, () => ({}));
+let TB = registerComponent(registry, () => ({}));
+let TC = registerComponent(registry, () => ({}));
+let TD = registerComponent(registry, () => ({}));
 
-world.create(range(50).map(() => [new A(), new B()]));
-world.create(range(50).map(() => [new A(), new D()]));
-world.create(range(100).map(() => [new C()]));
+let TAB = registerType(registry, [TA, TB]);
+let TAD = registerType(registry, [TA, TD]);
 
-let compsA = new Query([A]);
-let compsC = new Query([C]);
+let world = createWorld(registry);
 
-suite("Query")
+createEntities(world, TAB, 50);
+createEntities(world, TAD, 50);
+createEntities(world, TC, 100);
+
+let queryA = createQuery(world, TA);
+let queryC = createQuery(world, TC);
+
+suite("Query entities")
   .add("100 <C> (1 archetype)", () => {
-    for (let [comp] of compsC.values(world)) {
-      if (!comp) throw new Error();
-    }
+    iterateEntities(queryC, entity => {
+      if (!entity) throw new Error();
+    });
   })
   .add("100 <A> (2 archetypes)", () => {
-    for (let [comp] of compsA.values(world)) {
-      if (!comp) throw new Error();
-    }
+    iterateEntities(queryA, entity => {
+      if (!entity) throw new Error();
+    });
+  })
+  .run();
+
+suite("Query components")
+  .add("100 <C> (1 archetype)", () => {
+    iterateQuery(queryC, c => {
+      if (!c) throw new Error();
+    });
+  })
+  .add("100 <A> (2 archetypes)", () => {
+    iterateQuery(queryA, a => {
+      if (!a) throw new Error();
+    });
   })
   .run();

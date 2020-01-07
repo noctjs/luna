@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2019",
+    "target": "esnext",
     "lib": ["esnext"],
     "strict": true
   },
-  "include": ["src"]
+  "include": ["./src/**/*"]
 }

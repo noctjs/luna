@@ -37,11 +37,6 @@ const { suite } = require("../utils");
  *     lookup: 166,684 op/s (±0.55%)    [SLOWEST]
  *
  * Lookup based implementations are 2 times slower than the others.
- *
- * The 2 competiting implementations here are AoS and SoA. While SoA seems to
- * be faster, I think the AoS implementation is the safest one. These
- * benchmarks avoid dynamic property accesses which is really hard to achieve
- * for SoA implementations while it is relatively easy for AoS implementations.
  */
 
 // —————[ CASES ]———————————————————————————————————————————

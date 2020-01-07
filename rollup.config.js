@@ -2,9 +2,16 @@ import replace from "@rollup/plugin-replace";
 import typescript from "rollup-plugin-typescript2";
 import { terser } from "rollup-plugin-terser";
 
+let hasDeclarations = false;
+
 function createConfig({ format, output, replacements = {} }) {
+  let shouldEmitDeclarations = !hasDeclarations;
+  if (shouldEmitDeclarations) {
+    hasDeclarations = true;
+  }
+
   return {
-    input: "src/index.ts",
+    input: "./src/index.ts",
     output: {
       format,
       file: output,
@@ -15,7 +22,15 @@ function createConfig({ format, output, replacements = {} }) {
       }
     },
     plugins: [
-      typescript(),
+      typescript({
+        useTsconfigDeclarationDir: true,
+        tsconfigOverride: {
+          compilerOptions: {
+            declaration: shouldEmitDeclarations,
+            declarationDir: "./types"
+          }
+        }
+      }),
       replace(replacements),
       terser({
         ecma: 9,

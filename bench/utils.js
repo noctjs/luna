@@ -1,7 +1,12 @@
-const { Suite } = require("benchmark");
-const chalk = require("chalk");
+import Benchmark from "benchmark";
+import chalk from "chalk";
 
-exports.range = (min, max) => {
+/**
+ * @param {number} min
+ * @param {number=} max
+ * @returns {number[]}
+ */
+export function range(min, max) {
   if (typeof max === "undefined") {
     max = min;
     min = 0;
@@ -13,10 +18,14 @@ exports.range = (min, max) => {
   }
 
   return array;
-};
+}
 
-exports.suite = name => {
-  return new Suite()
+/**
+ * @param {string} name
+ * @returns {Benchmark.Suite}
+ */
+export function suite(name) {
+  return new Benchmark.Suite()
     .on("start", () => {
       console.log(chalk.white.bold(name));
     })
@@ -34,4 +43,4 @@ exports.suite = name => {
         console.log(`  ${bench.name}:`, chalk.gray(`${ops} op/s (±${rme}%)`));
       }
     });
-};
+}

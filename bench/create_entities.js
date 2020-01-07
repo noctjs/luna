@@ -1,53 +1,46 @@
-const { World } = require("..");
-const { range, suite } = require("./utils");
+import {
+  createEntities,
+  createEntity,
+  createTypeRegistry,
+  createWorld,
+  registerComponent,
+  registerType
+} from "../dist/luna.esm.js";
+import { suite } from "./utils.js";
 
-class A {}
-class B {}
-class C {}
-class D {}
-class E {}
+let registry = createTypeRegistry();
 
-const a = [new A()];
-const a1 = [a];
-const a50 = range(50).map(() => a);
-const a100 = range(100).map(() => a);
+let TA = registerComponent(registry, () => ({}));
+let TB = registerComponent(registry, () => ({}));
+let TC = registerComponent(registry, () => ({}));
+let TD = registerComponent(registry, () => ({}));
+let TE = registerComponent(registry, () => ({}));
 
-const b = [new B()];
-const b50 = range(50).map(() => b);
-
-const ab = [new A(), new B()];
-const ab100 = range(100).map(() => ab);
-
-const abcde = [new A(), new B(), new C(), new D(), new E()];
-const abcde100 = range(100).map(() => abcde);
+let TAB = registerType(registry, [TA, TB]);
+let TABCDE = registerType(registry, [TA, TB, TC, TD, TE]);
 
 suite("Create entities")
   .add("1 <A>, 100 times", () => {
-    let world = new World();
+    let world = createWorld(registry);
     for (let i = 0; i < 100; i++) {
-      world.create(a1);
+      createEntity(world, TA);
     }
   })
   .add("100 <A>", () => {
-    let world = new World();
-    world.create(a100);
+    let world = createWorld(registry);
+    createEntities(world, TA, 100);
   })
   .add("100 <A, B>", () => {
-    let world = new World();
-    world.create(ab100);
+    let world = createWorld(registry);
+    createEntities(world, TAB, 100);
   })
   .add("100 <A, B, C, D, E>", () => {
-    let world = new World();
-    world.create(abcde100);
+    let world = createWorld(registry);
+    createEntities(world, TABCDE, 100);
   })
   .add("50 <A>, 50 <B>", () => {
-    let world = new World();
-    world.create(a50);
-    world.create(b50);
-  })
-  .add("50 <A>, delete, 50 <A>", () => {
-    let world = new World();
-    world.create(a50).forEach(entity => world.delete(entity));
-    world.create(a50);
+    let world = createWorld(registry);
+    createEntities(world, TA, 50);
+    createEntities(world, TB, 50);
   })
   .run();
