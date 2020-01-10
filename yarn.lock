@@ -261,11 +261,6 @@ path-parse@^1.0.6:
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
   integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
 
-perform-ecs@^0.7.8:
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/perform-ecs/-/perform-ecs-0.7.8.tgz#230eadbedf799d29c3d05f62a59536cca0340eb6"
-  integrity sha512-+4WYfCW6/ZVYQDF+78RJc7oWmK2dqtfsdDRfB/kyiHfbQfRIWldJqn2hpQt0ByDWQgtFQrMGGpED1S9wQj3WOw==
-
 pkg-dir@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-4.2.0.tgz#f099133df7ede422e81d1d8448270eeb3e4261f3"
