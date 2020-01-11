@@ -1,12 +1,7 @@
-import { assert } from "./assert.js";
-import {
-  clearTable,
-  insertIntoTable,
-  removeFromTable,
-  Table
-} from "./table.js";
-import { allocateType, containsType, getTypeIndex, Type } from "./type.js";
-import { getTable, World } from "./world.js";
+import { assert } from "./assert";
+import { clearTable, insertIntoTable, removeFromTable, Table } from "./table";
+import { allocateType, containsType, getTypeIndex, Type } from "./type";
+import { getTable, World } from "./world";
 
 export interface Entity {
   _type: Type;
