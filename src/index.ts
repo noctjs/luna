@@ -1,4 +1,3 @@
-// API
 export {
   createEntities,
   createEntity,
