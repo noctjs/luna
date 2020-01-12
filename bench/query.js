@@ -1,4 +1,4 @@
-import {
+const {
   createEntities,
   createQuery,
   createTypeRegistry,
@@ -7,8 +7,8 @@ import {
   registerComponent,
   registerType,
   iterateQuery
-} from "../dist/luna.esm.js";
-import { suite } from "./utils.js";
+} = require("..");
+const { suite } = require("./utils");
 
 let registry = createTypeRegistry();
 
